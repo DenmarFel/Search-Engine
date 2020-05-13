@@ -8,7 +8,6 @@ class Posting:
         self.positions = [initial_pos]
         self.html_tags = [initial_html_tag]
         self.term_freq = 0
-        self.inverse_doc_freq = 1
 
     def __str__(self):
         return 'Posting(doc_id = {}, count = {}, tf = {}, idf = {})'.format(self.getDocId(), self.getCount(), self.getTermFreq(), self.getInverseDocFreq()) 
@@ -29,9 +28,6 @@ class Posting:
 
     def setTermFreq(self, total_words):
         self.term_freq = self.count / total_words
-
-    def setInverseDocFreq(self, appearances, total_doc = 55393):
-        self.inverse_doc_freq = log(float(total_doc) / appearances)
 
     def getDocId(self):
         return self.doc_id

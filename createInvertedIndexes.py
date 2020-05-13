@@ -48,7 +48,8 @@ def mergePartialIndexes(pi_folder: str, ii_folder: str, report_file: str):
             except EOFError:
                 token_postings.remove(token_postings[min_index])
                 doc_queue.remove(doc_queue[min_index])
+            print(token)
         offloadInvertedIndex(ii_folder, letter, inverted_index)
 
 
-mergePartialIndexes("partial_indx_0512", "inverted_indx_0512", "reports/m1_0512")
+mergePartialIndexes("partial_indx_0513", "inverted_indx_0513", "reports/m1_0513")

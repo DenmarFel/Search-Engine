@@ -29,4 +29,4 @@ def generateReportM1(ii_folder: str, docId_file: str, report_file: str):
         f.write("Size of inverted index (KB): " + str(ii_size) + "\n")
             
 
-generateReportM1('inverted_indx_0512', 'docId_url_dict/idUrl0512', 'reports/m1_0512')
+generateReportM1('inverted_indx_0513', 'docId_url_dict/idUrl0513', 'reports/m1_0513')
