@@ -7,6 +7,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 
+
 def booleanRetrieval(query: str, mode: str, ii_folder: str, doc_id_file: str):
     ps = PorterStemmer()
     stop_words = set(stopwords.words('english'))
@@ -48,9 +49,8 @@ def grabUrls(doc_ids: [int], doc_id_file: str):
         doc_id_dict = pickle.load(f)
         return [doc_id_dict[doc_id] for doc_id in doc_ids]
 
-if __name__ == '__main__':
 
-    
+if __name__ == '__main__':  
     query = input('Search: ')
     mode =  'and' # input("Choose Mode ('and', 'or'): ")
     ii_folder = 'inverted_indx_0513'

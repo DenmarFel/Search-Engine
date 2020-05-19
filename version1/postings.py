@@ -10,7 +10,7 @@ class Posting:
         self.term_freq = 0
 
     def __str__(self):
-        return 'Posting(doc_id = {}, count = {}, tf = {}, idf = {})'.format(self.getDocId(), self.getCount(), self.getTermFreq(), self.getInverseDocFreq()) 
+        return 'Posting(doc_id = {}, count = {}, tf = {})'.format(self.getDocId(), self.getCount(), self.getTermFreq()) 
 
     def convertToDict(self):
         posting_json = {}
@@ -18,7 +18,6 @@ class Posting:
         posting_json['count'] = self.getCount()
         posting_json['positions'] = self.getPositions()
         posting_json['term_freq'] = self.getTermFreq()
-        posting_json['inverse_doc_freq'] = self.getInverseDocFreq()
         return posting_json
 
     def updatePosting(self, new_pos: int, new_html_tag: str):
@@ -43,6 +42,3 @@ class Posting:
 
     def getTermFreq(self):
         return self.term_freq
-
-    def getInverseDocFreq(self):
-        return self.inverse_doc_freq

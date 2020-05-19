@@ -2,12 +2,14 @@
 __pycache__/
 
 # Results
-docId_url_dict/
-partial_indx_0512/
-partial_indx_0513/
-inverted_indx_0512/
-inverted_indx_0513/
-reports/
+version1/docId_url_dict/
+version1/partial_indx_0512/
+version1/partial_indx_0513/
+version1/inverted_indx_0512/
+version1/inverted_indx_0513/
+version1/reports/
+version2/partial_indexes0518
+version2/docId_url_dict
 
 # Given Directories
 ANALYST/
