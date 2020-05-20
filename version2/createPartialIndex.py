@@ -21,7 +21,7 @@ def listOfDirectoryFiles(directory: str) -> list:
 
 
 def isValidElement(element: 'bs4.element') -> bool:
-    invalid_html_tags = {'[document]', 'noscript', 'header', 'html', 'meta', 'head', 'input', 'script', 'canvas'}
+    invalid_html_tags = {'[document]', 'noscript', 'header', 'html', 'meta', 'head', 'input', 'script', 'canvas', 'style'}
     # Skip element if it is not visible on document
     if element.parent.name in invalid_html_tags:
         return False
@@ -73,9 +73,10 @@ def getTermCount(term_dict: dict) -> int:
 
 def offloadPartialIndex(partial_index: dict, output_folder: str):
     num = len(os.listdir(output_folder))
-    file_name = "{}/partial_indx{}".format(output_folder, num)
+    file_name = "{}/partial_index{}".format(output_folder, num)
     with open(file_name, "wb") as open_file:
-        pickle.dump(partial_index, open_file, protocol = pickle.HIGHEST_PROTOCOL)
+        for token, postings in sorted(partial_index.items()):
+            pickle.dump((token, postings), open_file, protocol = pickle.HIGHEST_PROTOCOL)
     print("Created:", file_name)
 
 
@@ -118,4 +119,4 @@ def createPartialIndexes(directory: str, doc_id_file: str, pi_folder: str):
         pickle.dump(doc_id_dict, open_file, protocol = pickle.HIGHEST_PROTOCOL)
 
 
-createPartialIndexes("DEV", "version2/docId_url_dict/idUrl0518", "version2/partial_indexes0518")
+createPartialIndexes("DEV", "version2/docId_url_dict/idUrl0518", "version2/partial_indexes/partial_indexes0518")
