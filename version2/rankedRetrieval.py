@@ -14,7 +14,7 @@ def formatQuery(query: str) -> [str]:
     ps = PorterStemmer()
     stop_words = set(stopwords.words('english'))
     return [ps.stem(word.lower()) for word in word_tokenize(query) if word not in stop_words]
-    
+
 
 # Convers an entire line from the inverted index txt file into a Posting
 def grabPostings(seek_value: int, open_ii_txt) -> [Posting]:
@@ -54,7 +54,26 @@ def intersectionOfPostings(postings_of_tokens: [[Posting]]) -> {int}:
     return doc_ids
 
 
-# def cosineScore(tokens: [str]):
+# lnc (logarithmic tf, no idf, cosine normalization)
+# Computes the lnc portion of lnc.ltc(ddd.qqq) SMART Notation 
+def lnc(tokens: [str], nested_dict: dict, doc_id: int) -> [float]:
+    tf_vector = [log(1 + nested_dict[token][doc_id].getTermFreq()) for token in tokens]
+    divisor = sqrt(sum([num ** 2 for num in tf_vector]))
+    normalized_wt_vector_lnc = [num / divisor for num in tf_vector]
+    return normalized_wt_vector_lnc
+
+
+# ltc (logarithmic tf, idf, cosine normalization)
+# Computes the ltc portion of lnc.ltc(ddd.qqq) SMART Notation 
+def ltc(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt) -> [float]:
+    logarithmic_tf_vector = [log(1 + (tokens.count(token) / len(tokens))) for token in tokens]
+    idf_vector = [log10(len(doc_id_dict) / len(grabPostings(ii_dict[token], open_ii_txt))) if token in ii_dict else 0 for token in tokens]
+    wt_vector = [logarithmic_tf_vector[i] * idf_vector[i] for i in range(len(logarithmic_tf_vector))]
+    divisor = sqrt(sum([num ** 2 for num in wt_vector]))
+    normalized_wt_vector = [num / divisor for num in wt_vector]
+    return normalized_wt_vector
+
+
 def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
     nested_dict = {}
     for token in tokens:
@@ -75,23 +94,7 @@ def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
         results.append((doc_score, doc_id_dict[doc_id]))
     return sorted(results, reverse = True)
 
-def lnc(tokens: [str], nested_dict: dict, doc_id: int) -> [float]:
-    tf_vector = [log(1 + nested_dict[token][doc_id].getTermFreq()) for token in tokens]
-    divisor = sqrt(sum([num ** 2 for num in tf_vector]))
-    normalized_wt_vector_lnc = [num / divisor for num in tf_vector]
-    return normalized_wt_vector_lnc
-
-# ltc (logarithmic tf, idf, cosine normalization)
-# Computes the ltc portion of lnc.ltc(ddd.qqq) SMART Notation 
-def ltc(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt) -> [float]:
-    logarithmic_tf_vector = [log(1 + (tokens.count(token) / len(tokens))) for token in tokens]
-    idf_vector = [log10(len(doc_id_dict) / len(grabPostings(ii_dict[token], open_ii_txt))) if token in ii_dict else 0 for token in tokens]
-    wt_vector = [logarithmic_tf_vector[i] * idf_vector[i] for i in range(len(logarithmic_tf_vector))]
-    divisor = sqrt(sum([num ** 2 for num in wt_vector]))
-    normalized_wt_vector = [num / divisor for num in wt_vector]
-    return normalized_wt_vector
-
-
+    
 if __name__ == '__main__':  
 
     # Inverted Index Pickle (ii_pickle)
