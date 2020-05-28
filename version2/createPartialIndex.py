@@ -6,8 +6,8 @@ import pickle
 
 from bs4 import BeautifulSoup
 from bs4.element import Comment
-
 from nltk.stem import PorterStemmer
+from math import log10
 
 from postings import Posting
 
@@ -96,7 +96,7 @@ def createPartialIndexes(directory: str, doc_id_file: str, pi_folder: str):
             print(doc_id, sys.getsizeof(partial_index))
             for word in term_dict:
                 count = len(term_dict[word][0])
-                term_freq = count / term_count
+                term_freq = 1 + log10(count / term_count)
                 positions = term_dict[word][0]
                 html_tags = term_dict[word][1]
                 posting = Posting(doc_id, count, term_freq, positions, html_tags)
@@ -119,4 +119,4 @@ def createPartialIndexes(directory: str, doc_id_file: str, pi_folder: str):
         pickle.dump(doc_id_dict, open_file, protocol = pickle.HIGHEST_PROTOCOL)
 
 
-createPartialIndexes("DEV", "version2/docId_url_dict/idUrl0518", "version2/partial_indexes/partial_indexes0518")
+createPartialIndexes("DEV", "version2/docId_url_dict/idUrl0528", "version2/partial_indexes/partial_indexes0528")
