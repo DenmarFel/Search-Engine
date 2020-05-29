@@ -67,7 +67,7 @@ def lnc(tokens: [str], nested_dict: dict, doc_id: int) -> [float]:
 # Computes the ltc portion of lnc.ltc(ddd.qqq) SMART Notation 
 def ltc(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt) -> [float]:
     logarithmic_tf_vector = [log(1 + (tokens.count(token) / len(tokens))) for token in tokens]
-    idf_vector = [log10(len(doc_id_dict) / len(grabPostings(ii_dict[token], open_ii_txt))) if token in ii_dict else 0 for token in tokens]
+    idf_vector = [log(len(doc_id_dict) / len(grabPostings(ii_dict[token], open_ii_txt))) if token in ii_dict else 0 for token in tokens]
     wt_vector = [logarithmic_tf_vector[i] * idf_vector[i] for i in range(len(logarithmic_tf_vector))]
     divisor = sqrt(sum([num ** 2 for num in wt_vector]))
     normalized_wt_vector = [num / divisor for num in wt_vector]
@@ -76,6 +76,10 @@ def ltc(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt) -> [float]
 
 def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
     nested_dict = {}
+    for token in tokens: 
+        if token not in ii_dict:
+            return []
+            
     for token in tokens:
         nested_dict[token] = {}
         for posting in grabPostings(ii_dict[token], open_ii_txt):
@@ -94,14 +98,14 @@ def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
         results.append((doc_score, doc_id_dict[doc_id]))
     return sorted(results, reverse = True)
 
-    
+
 if __name__ == '__main__':  
 
     # Inverted Index Pickle (ii_pickle)
     # Pickle file contains Python dictionary with keys being tokens and values 
     # being the position of the corresponding Posting's list in ii_txt.
     # This enables constant access to the Posting's list of a token.
-    ii_pickle = 'version2/inverted_indexes/inverted_index0523.pickle'
+    ii_pickle = 'version2/inverted_indexes/inverted_index0528.pickle'
 
     # Inverted Index Text File (ii_txt)
     # Txt file contains all postings of the inverted index. 
@@ -111,14 +115,14 @@ if __name__ == '__main__':
     #   term_frequency (float) (Number of times term t appears in a document) / (Total number of terms in the document)
     #   positions ([int])
     #   html_tags ([str])
-    ii_txt = 'version2/inverted_indexes/inverted_index0523.txt'
+    ii_txt = 'version2/inverted_indexes/inverted_index0528.txt'
 
     # Document Id File (doc_id_pickle)
     # Pickle file contains Python dictionary with keys being document_id and 
     # values being the corresponding url. This dictionary is useful for 
     # obtaining the total amount of documents for idf computation and gathering
     # urls to return given a query.
-    doc_id_pickle = 'version2/docId_url_dict/idUrl0518'
+    doc_id_pickle = 'version2/docId_url_dict/idUrl0528'
 
     # Open files once. Then use throughout program.
     with open(ii_pickle, 'rb') as f: 
@@ -137,6 +141,7 @@ if __name__ == '__main__':
         results = cosineRank(formatted_query, doc_id_dict, ii_dict, open_ii_txt)
         end = process_time()
 
-        print("Elapsed time during the search in seconds:", end-start)
         for item in results:
             print(item)
+            
+        print("Elapsed time during the search in seconds:", end-start)

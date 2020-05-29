@@ -3,11 +3,12 @@ import json
 import re
 import sys
 import pickle
+import hashlib
 
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from nltk.stem import PorterStemmer
-from math import log10
+from bitstring import BitArray
 
 from postings import Posting
 
@@ -71,6 +72,36 @@ def getTermCount(term_dict: dict) -> int:
     return term_count
 
 
+# This creates a simhash of the term dictionary. This simhash is used to check 
+# for exact duplicates. Near duplicates are not yet implemented. The simhash is 
+# a string representing 128bit vector.
+def simhashify(term_dict: dict):
+    bitArray_dict = {}
+    for word in term_dict:
+        count = len(term_dict[word][0])
+        md5_obj = hashlib.md5()
+        md5_obj.update(word.encode("UTF-8"))
+        bitArray = BitArray(hex = md5_obj.hexdigest()).bin
+        bitArray_dict[bitArray] = count
+
+    vector = [0 for i in range(0, 128)]
+    for idx in range(0, 128):
+        for bitArray, count in bitArray_dict.items():
+            if bitArray[idx] == '0':
+                vector[idx] += -1 * count
+            else:
+                vector[idx] += count
+    
+    binary_vector = [1 if num > -1 else 0 for num in vector]
+    
+    simhash = ''
+    for num in binary_vector:
+        simhash += str(num)
+    
+    return simhash
+
+
+# This adds the partial index as a pickle file to the partial index folder
 def offloadPartialIndex(partial_index: dict, output_folder: str):
     num = len(os.listdir(output_folder))
     file_name = "{}/partial_index{}".format(output_folder, num)
@@ -86,17 +117,28 @@ def createPartialIndexes(directory: str, doc_id_file: str, pi_folder: str):
     doc_id_dict = {} # doc_id : url
 
     doc_id = 0
+
+    simhash_dict = {}
+
     for json_file in json_files:
+        if doc_id % 500 == 0: print(doc_id)
         with open(json_file) as open_file:
             data = json.load(open_file)
             
             term_dict = createTermDictionary(data['content']) # term : ([pos], [parent tag])
             term_count = getTermCount(term_dict)
 
-            print(doc_id, sys.getsizeof(partial_index))
+            simhash = simhashify(term_dict)
+            if simhash in simhash_dict:
+                # print("Duplicate found! {} is not getting added because {} is already in partial index.".format(data["url"], simhash_dict[simhash]))
+                continue
+            else:
+                simhash_dict[simhash] = data["url"]
+
+            # print(doc_id, sys.getsizeof(partial_index))
             for word in term_dict:
                 count = len(term_dict[word][0])
-                term_freq = 1 + log10(count / term_count)
+                term_freq = count / term_count
                 positions = term_dict[word][0]
                 html_tags = term_dict[word][1]
                 posting = Posting(doc_id, count, term_freq, positions, html_tags)
