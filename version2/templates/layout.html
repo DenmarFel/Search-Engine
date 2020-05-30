@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    {% if query %}
+        <title>{{ query }} - Denmar Denmar Go</title>
+    {% else %}
+        <title>Denmar Denmar Go</title>
+    {% endif %}
+    
+</head>
+
+<body>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

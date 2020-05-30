@@ -3,7 +3,6 @@ import pickle
 from contextlib import ExitStack
 from postings import Posting
 
-tags = set()
 
 def formatPostings(token: str, postings: [Posting]) -> str:
     postings_txt = []
@@ -13,7 +12,6 @@ def formatPostings(token: str, postings: [Posting]) -> str:
         term_freq = posting.getTermFreq()
         positions = posting.getPositions()
         html_tags = posting.getHtmlTags()
-        tags.update(html_tags)
         posting_txt = "({}, {}, {}, [".format(doc_id, count, term_freq)
         for i in range(len(positions)):
             if i != len(positions) - 1:
@@ -68,8 +66,6 @@ def mergePartialIndexes(pi_folder: str, ii_txt: str, ii_pickle):
 
     with open(ii_pickle, 'wb') as open_file:
         pickle.dump(inverted_index_pickle, open_file, protocol = pickle.HIGHEST_PROTOCOL)
-    print(total)
 
 
 mergePartialIndexes("version2/partial_indexes/partial_indexes0528", "version2/inverted_indexes/inverted_index0528.txt", "version2/inverted_indexes/inverted_index0528.pickle")
-print(tags)

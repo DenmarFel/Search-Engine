@@ -1,6 +1,3 @@
-import re
-import os
-import string
 import pickle
 from time import process_time 
 from nltk.tokenize import word_tokenize
@@ -8,7 +5,6 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 
 from postings import Posting
-
 
 def booleanRetrieval(query: str, mode: str, ii_dict: dict, ii_file, doc_id_dict: dict):
     ps = PorterStemmer()
@@ -19,15 +15,12 @@ def booleanRetrieval(query: str, mode: str, ii_dict: dict, ii_file, doc_id_dict:
 
 
 def booleanRetrievalAnd(tokens: list, ii_dict: dict, ii_file, doc_id_dict: dict):
-    print(tokens)
     postings_of_tokens = [grabPosting(ii_dict[token], ii_file) for token in tokens if token in ii_dict]
-
     if len(tokens) == 0: return []
-    
+
     doc_ids = {posting.getDocId() for posting in postings_of_tokens[0]}
     for i in range(1, len(postings_of_tokens)):
         doc_ids.intersection({posting.getDocId() for posting in postings_of_tokens[i]})
-    
     return sorted(grabUrls(doc_ids, doc_id_dict))
 
 

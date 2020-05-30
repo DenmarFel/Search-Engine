@@ -1,0 +1,88 @@
+h1 { font-family: Lato; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } 
+h3 { font-family: Lato; font-size: 1em; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } 
+p { font-family: Lato; font-size: 1em; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } 
+blockquote { font-family: Lato; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
+pre { font-family: Lato; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5667px; }
+
+body {
+    color: white;
+    background-color: #242426;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.content {
+    margin: auto;
+    max-width: 900px;
+}
+
+#searchbox {
+    padding: 50% 0;
+    text-align: center;
+}
+
+input[type=text] {
+    padding: 0.8em;
+    border: none;
+    border-radius: 10px;
+
+    color: white;
+    background-color: #48484A;
+
+    font-size: 1.125em;
+    width: 80%;
+}
+
+ul {
+    padding: 0;
+}
+
+.result-header {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 11% 89%;
+
+    margin-top: 40px;
+    margin-bottom: 15px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    border-radius: 10px;
+
+    background-color: #444446;  
+}
+
+ul a:visited .url{
+    color: #0081DB;
+}
+
+.result {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 11% 89%;
+
+    margin-bottom: 15px;
+    padding: 0.5em;
+    border-radius: 10px;
+
+    background-color: #444446;  
+}
+
+.result:hover {
+    transform: scale(1.05);
+}
+
+.result .url {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

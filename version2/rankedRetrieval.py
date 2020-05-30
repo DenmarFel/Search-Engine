@@ -1,13 +1,11 @@
 import pickle
-
-from math import log, log10, sqrt
-from time import process_time 
+from math import log, sqrt
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
+from time import process_time 
 
 from postings import Posting
-  
 
 # Rids query of stop words and stems each token using NLTK
 def formatQuery(query: str) -> [str]:
@@ -85,7 +83,11 @@ def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
         for posting in grabPostings(ii_dict[token], open_ii_txt):
             nested_dict[token][posting.getDocId()] = posting
 
-    doc_ids = set(nested_dict[tokens[0]].keys())
+    try:
+        doc_ids = set(nested_dict[tokens[0]].keys())
+    except:
+        return []
+        
     for i in range(1, len(tokens)):
         doc_ids = doc_ids.intersection(set(nested_dict[tokens[i]].keys()))
     
@@ -99,7 +101,7 @@ def cosineRank(tokens: [str], doc_id_dict: dict, ii_dict: dict, open_ii_txt):
     return sorted(results, reverse = True)
 
 
-if __name__ == '__main__':  
+def processQuery(query):
 
     # Inverted Index Pickle (ii_pickle)
     # Pickle file contains Python dictionary with keys being tokens and values 
@@ -132,16 +134,8 @@ if __name__ == '__main__':
         doc_id_dict = pickle.load(f)
 
     with open(ii_txt) as open_ii_txt:
-        query = input("Search: ")
-        k = 10
         formatted_query = formatQuery(query)
-        print(formatted_query)
-
         start = process_time()
         results = cosineRank(formatted_query, doc_id_dict, ii_dict, open_ii_txt)
         end = process_time()
-
-        for item in results:
-            print(item)
-            
-        print("Elapsed time during the search in seconds:", end-start)
+        return (results, end - start)

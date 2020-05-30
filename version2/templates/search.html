@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="searchbox">
+<h1>DenmarDenmarGo</h1>
+<form action="/results" method="GET">
+    <input type="text" name="query" placeholder="Search...">
+</form>
+</div>
+
+<script type="text/javascript" language="JavaScript">
+    document.querySelector("input[type='text']").focus();
+</script>
+{% endblock %}

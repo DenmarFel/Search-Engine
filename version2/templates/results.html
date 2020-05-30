@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<a id="logo" href="/"><h1>DenmarDenmarGo</h1></a>
+<form>
+    <input type="text" name="query" placeholder="Search...">
+</form>
+
+<h3>Results for {{ query }}</h3>
+<h3>{{ results|length }} results in {{ time }} seconds</h3>
+
+<ul>
+    <li class="result-header">
+        <p>Doc Score</p>
+        <p>Url</p>
+    </li>
+    {% for result in results %}
+    <a href={{ result[1] }}>
+    <li class="result">
+        <div class="ranking"><p>{{ "%.4f"|format(result[0]|float) }}</p></div>
+        <div class="url"><p>{{ result[1] }}</p></div>
+    </li>
+    </a>
+    {% endfor %}
+</ul>
+
+{% endblock %}
